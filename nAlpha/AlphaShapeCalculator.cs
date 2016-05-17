@@ -20,6 +20,7 @@ namespace nAlpha
         {
             SetData(points);
             CalculateShape();
+            CloseShapeInternal();
             return GetShape();
         }
 
@@ -36,6 +37,49 @@ namespace nAlpha
             {
                 ProcessPoint(point);
             }
+        }
+
+        private void CloseShapeInternal()
+        {
+            if (CloseShape)
+            {
+                Dictionary<int, int> vertices = new Dictionary<int, int>();
+
+                foreach (var edge in resultingEdges)
+                {
+                    CountVertexIndex(vertices, edge.Item1);
+                    CountVertexIndex(vertices, edge.Item2);
+                }
+
+                var vertexIndices = vertices.Where(kvp => kvp.Value < 2).Select(kvp => kvp.Key).ToArray();
+                foreach (var vertexIndex in vertexIndices)
+                {
+                    var nearestPendingVertex = GetNearestPendingVertex(vertexIndices, vertexIndex);
+                    AddEdge(resultingVertices[vertexIndex], resultingVertices[nearestPendingVertex]);
+                }
+            }
+        }
+
+        private static void CountVertexIndex(Dictionary<int, int> vertices, int i)
+        {
+            if (!vertices.ContainsKey(i))
+            {
+                vertices.Add(i, 0);
+            }
+            vertices[i]++;
+        }
+
+        private int GetNearestPendingVertex(int[] vertices, int vertexIndex)
+        {
+            var vertexPoint = GetVertex(vertexIndex);
+            var vertexIndicesWithDistance =
+                vertices.Where(v => v != vertexIndex).Select(v => new {Index = v, Distance = resultingVertices[v].DistanceTo(vertexPoint)});
+            return vertexIndicesWithDistance.Aggregate((a, b) => a.Distance < b.Distance ? a : b).Index;
+        }
+
+        private Point GetVertex(int vertexIndex)
+        {
+            return resultingVertices[vertexIndex];
         }
 
         private void ProcessPoint(Point point)
@@ -60,8 +104,14 @@ namespace nAlpha
             indexP1 = AddVertex(p1);
             indexP2 = AddVertex(p2);
 
-            resultingEdges.Add(new Tuple<int, int>(indexP1, indexP2));
+            AddEdge(indexP1, indexP2);
+        }
 
+        private void AddEdge(int indexP1, int indexP2)
+        {
+            if (!resultingEdges.Contains(new Tuple<int, int>(indexP1, indexP2))
+                && !resultingEdges.Contains(new Tuple<int, int>(indexP2, indexP1)))
+                resultingEdges.Add(new Tuple<int, int>(indexP1, indexP2));
         }
 
         private int AddVertex(Point p)

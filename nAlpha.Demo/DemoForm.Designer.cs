@@ -1,6 +1,6 @@
 ﻿namespace nAlpha.Demo
 {
-    partial class Form1
+    partial class DemoForm
     {
         /// <summary>
         /// Required designer variable.
@@ -31,15 +31,16 @@
             this.buttonStart = new System.Windows.Forms.Button();
             this.numericUpDownAlpha = new System.Windows.Forms.NumericUpDown();
             this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
+            this.checkBoxCloseShape = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAlpha)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonStart
             // 
-            this.buttonStart.Location = new System.Drawing.Point(12, 64);
+            this.buttonStart.Location = new System.Drawing.Point(12, 87);
             this.buttonStart.Name = "buttonStart";
-            this.buttonStart.Size = new System.Drawing.Size(75, 23);
+            this.buttonStart.Size = new System.Drawing.Size(80, 23);
             this.buttonStart.TabIndex = 0;
             this.buttonStart.Text = "Start";
             this.buttonStart.UseVisualStyleBackColor = true;
@@ -60,7 +61,7 @@
             0,
             0});
             this.numericUpDownAlpha.Name = "numericUpDownAlpha";
-            this.numericUpDownAlpha.Size = new System.Drawing.Size(75, 20);
+            this.numericUpDownAlpha.Size = new System.Drawing.Size(80, 20);
             this.numericUpDownAlpha.TabIndex = 1;
             this.numericUpDownAlpha.Value = new decimal(new int[] {
             5,
@@ -77,23 +78,35 @@
             0,
             0});
             this.numericUpDown2.Name = "numericUpDown2";
-            this.numericUpDown2.Size = new System.Drawing.Size(75, 20);
+            this.numericUpDown2.Size = new System.Drawing.Size(80, 20);
             this.numericUpDown2.TabIndex = 2;
             // 
-            // Form1
+            // checkBox1
+            // 
+            this.checkBoxCloseShape.AutoSize = true;
+            this.checkBoxCloseShape.Location = new System.Drawing.Point(12, 64);
+            this.checkBoxCloseShape.Name = "checkBoxCloseShape";
+            this.checkBoxCloseShape.Size = new System.Drawing.Size(52, 17);
+            this.checkBoxCloseShape.TabIndex = 3;
+            this.checkBoxCloseShape.Text = "Close";
+            this.checkBoxCloseShape.UseVisualStyleBackColor = true;
+            // 
+            // DemoForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(371, 350);
+            this.Controls.Add(this.checkBoxCloseShape);
             this.Controls.Add(this.numericUpDown2);
             this.Controls.Add(this.numericUpDownAlpha);
             this.Controls.Add(this.buttonStart);
-            this.Name = "Form1";
+            this.Name = "DemoForm";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAlpha)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -102,6 +115,7 @@
         private System.Windows.Forms.Button buttonStart;
         private System.Windows.Forms.NumericUpDown numericUpDownAlpha;
         private System.Windows.Forms.NumericUpDown numericUpDown2;
+        private System.Windows.Forms.CheckBox checkBoxCloseShape;
     }
 }
 

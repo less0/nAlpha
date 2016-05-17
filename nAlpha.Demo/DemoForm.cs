@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 namespace nAlpha.Demo
 {
-    public partial class Form1 : Form
+    public partial class DemoForm : Form
     {
         private Point[] points;
         private Point[] vertices
@@ -19,7 +19,7 @@ namespace nAlpha.Demo
 
         private Tuple<int, int>[] edges;
 
-        public Form1()
+        public DemoForm()
         {
             InitializeComponent();
         }
@@ -34,8 +34,9 @@ namespace nAlpha.Demo
             Random random = new Random();
             AlphaShapeCalculator shapeCalculator = new AlphaShapeCalculator();
             shapeCalculator.Alpha = (double) numericUpDownAlpha.Value / Width;
+            shapeCalculator.CloseShape = checkBoxCloseShape.Checked;
 
-            List<nAlpha.Point> points = new List<Point>();
+            List<Point> points = new List<Point>();
 
             for (int i = 0; i < numericUpDown2.Value; i++)
             {
