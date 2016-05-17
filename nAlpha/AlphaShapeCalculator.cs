@@ -84,16 +84,21 @@ namespace nAlpha
 
         private void ProcessPoint(Point point)
         {
-            var nearbyPoints = NearbyPoints(point);
-            foreach (var otherPoint in nearbyPoints.Where(p => p!=point))
+            foreach (var otherPoint in NearbyPoints(point))
             {
                 Tuple<Point, Point> alphaDiskCenters = CalculateAlphaDiskCenters(point, otherPoint);
-                if (NearbyPoints(alphaDiskCenters.Item1).Count(p => p != point && p != otherPoint) == 0
-                    || NearbyPoints(alphaDiskCenters.Item2).Count(p => p != point && p != otherPoint) == 0)
+
+                if (!DoOtherPointsFallWithinDisk(alphaDiskCenters.Item1, point, otherPoint)
+                    || !DoOtherPointsFallWithinDisk(alphaDiskCenters.Item2, point, otherPoint))
                 {
                     AddEdge(point, otherPoint);
                 }
             }
+        }
+
+        private bool DoOtherPointsFallWithinDisk(Point center, Point p1, Point p2)
+        {
+            return NearbyPoints(center).Count(p => p != p1 && p != p2) > 0;
         }
 
         private void AddEdge(Point p1, Point p2)
@@ -127,25 +132,30 @@ namespace nAlpha
 
         private Point[] NearbyPoints(Point point)
         {
-            var nearbyPoints = points.Where(p => p.DistanceTo(point) <= Radius).ToArray();
+            var nearbyPoints = points.Where(p => p.DistanceTo(point) <= Radius && p != point).ToArray();
             return nearbyPoints;
         }
 
         private Tuple<Point, Point> CalculateAlphaDiskCenters(Point p1, Point p2)
         {
-            double d = p1.DistanceTo(p2);
-            double s = d;
-            double r = Radius;
-            double h = r - Math.Sqrt(r*r - s*s/4);
+            double distanceBetweenPoints = p1.DistanceTo(p2);
+            double distanceFromConnectionLine = Math.Sqrt(Radius*Radius - distanceBetweenPoints*distanceBetweenPoints/4);
 
-            Point center = new Point((p1.X+p2.X)/2, (p1.Y + p2.Y)/2);
-            Point vector = new Point((p2.X-p1.X)/d, (p2.Y-p1.Y)/d);
+            Point centerOfConnectionLine = p1.CenterTo(p2);
+            Point vector = p1.VectorTo(p2);
+
+            return GetAlphaDiskCenters(vector, centerOfConnectionLine, distanceFromConnectionLine);
+        }
+
+        private static Tuple<Point, Point> GetAlphaDiskCenters(Point vector, Point center, double distanceFromConnectionLine)
+        {
             Point normalVector = new Point(vector.Y, -vector.X);
-
             return
                 new Tuple<Point, Point>(
-                    new Point(center.X + normalVector.X*(r - h), center.Y + normalVector.Y*(r - h)),
-                    new Point(center.X - normalVector.X*(r - h), center.Y - normalVector.Y*(r - h)));
+                    new Point(center.X + normalVector.X*distanceFromConnectionLine,
+                        center.Y + normalVector.Y*distanceFromConnectionLine),
+                    new Point(center.X - normalVector.X*distanceFromConnectionLine,
+                        center.Y - normalVector.Y*distanceFromConnectionLine));
         }
 
         private Shape GetShape()

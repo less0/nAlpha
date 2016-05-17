@@ -1,0 +1,2 @@
+packages\OpenCover.4.6.519\tools\OpenCover.Console.exe -target:"C:\Users\paul\Programme\NUnit-3.2.1\bin\nunit3-console.exe" -targetargs:"nAlpha.Test\bin\Debug\nAlpha.Test.dll" -filter:"+[*]* -[nAlpha.Test]*" -register
+packages\ReportGenerator.2.4.5.0\tools\ReportGenerator.exe -reporttypes:Badges;Html "-reports:results.xml" -targetdir:"./Report"

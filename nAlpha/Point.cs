@@ -51,5 +51,17 @@ namespace nAlpha
         {
             return Math.Sqrt((X - p.X)*(X - p.X) + (Y - p.Y)*(Y - p.Y));
         }
+
+        public Point CenterTo(Point p)
+        {
+            return new Point((X + p.X)/2, (Y + p.Y)/2);
+        }
+
+        public Point VectorTo(Point p)
+        {
+            double d = DistanceTo(p);
+            return new Point((p.X - X)/d, 
+                (p.Y - Y)/d);
+        }
     }
 }

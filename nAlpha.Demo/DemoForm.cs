@@ -31,37 +31,55 @@ namespace nAlpha.Demo
 
         private void buttonStart_Click(object sender, EventArgs e)
         {
-            Random random = new Random();
-            AlphaShapeCalculator shapeCalculator = new AlphaShapeCalculator();
-            shapeCalculator.Alpha = (double) numericUpDownAlpha.Value / Width;
-            shapeCalculator.CloseShape = checkBoxCloseShape.Checked;
+            var shapeCalculator = GetAlphaShapeCalculator();
+            var points = GetRandomPoints();
+            var shape = shapeCalculator.CalculateShape(points.ToArray());
+            SaveResults(points, shape);
 
+            Invalidate();
+        }
+
+        private void SaveResults(List<Point> points, Shape shape)
+        {
+            this.points = points.ToArray();
+            this.vertices = shape.Vertices;
+            this.edges = shape.Edges;
+        }
+
+        private AlphaShapeCalculator GetAlphaShapeCalculator()
+        {
+            AlphaShapeCalculator shapeCalculator = new AlphaShapeCalculator();
+            shapeCalculator.Alpha = (double) numericUpDownAlpha.Value/Width;
+            shapeCalculator.CloseShape = checkBoxCloseShape.Checked;
+            return shapeCalculator;
+        }
+
+        private List<Point> GetRandomPoints()
+        {
+            Random random = new Random();
             List<Point> points = new List<Point>();
 
             for (int i = 0; i < numericUpDown2.Value; i++)
             {
-                points.Add(new Point(random.NextDouble()*(Width-100)+50, random.NextDouble()*(Height-100)+50));
+                points.Add(new Point(Math.Round(random.NextDouble(),1)*(Width - 100) + 50, Math.Round(random.NextDouble(),1)*(Height - 100) + 50));
             }
-
-            var shape = shapeCalculator.CalculateShape(points.ToArray());
-
-            this.points = points.ToArray();
-            this.vertices = shape.Vertices;
-            this.edges = shape.Edges;
-
-            Invalidate();
+            return points;
         }
 
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
-            var graphics = e.Graphics;
-            graphics.SmoothingMode = SmoothingMode.AntiAlias;
-
-            var points = this.points;
+            var graphics = InitGraphics(e);
             DrawPoints(graphics, Brushes.Black, points);
             DrawPoints(graphics, Brushes.CadetBlue, vertices);
             DrawEdges(graphics, Pens.DarkBlue, vertices, edges);
+        }
+
+        private static Graphics InitGraphics(PaintEventArgs e)
+        {
+            var graphics = e.Graphics;
+            graphics.SmoothingMode = SmoothingMode.AntiAlias;
+            return graphics;
         }
 
         private void DrawEdges(Graphics graphics, Pen pen, Point[] vertices1, Tuple<int, int>[] edges)
