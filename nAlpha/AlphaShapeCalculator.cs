@@ -43,15 +43,9 @@ namespace nAlpha
         {
             if (CloseShape)
             {
-                Dictionary<int, int> vertices = new Dictionary<int, int>();
+                var vertexCounts = CountVertices();
 
-                foreach (var edge in resultingEdges)
-                {
-                    CountVertexIndex(vertices, edge.Item1);
-                    CountVertexIndex(vertices, edge.Item2);
-                }
-
-                var vertexIndices = vertices.Where(kvp => kvp.Value < 2).Select(kvp => kvp.Key).ToArray();
+                var vertexIndices = vertexCounts.Where(kvp => kvp.Value < 2).Select(kvp => kvp.Key).ToArray();
                 foreach (var vertexIndex in vertexIndices)
                 {
                     var nearestPendingVertex = GetNearestPendingVertex(vertexIndices, vertexIndex);
@@ -60,7 +54,19 @@ namespace nAlpha
             }
         }
 
-        private static void CountVertexIndex(Dictionary<int, int> vertices, int i)
+        private Dictionary<int, int> CountVertices()
+        {
+            Dictionary<int, int> vertexCounts = new Dictionary<int, int>();
+
+            foreach (var edge in resultingEdges)
+            {
+                IncreaseVertexCountByIndex(vertexCounts, edge.Item1);
+                IncreaseVertexCountByIndex(vertexCounts, edge.Item2);
+            }
+            return vertexCounts;
+        }
+
+        private static void IncreaseVertexCountByIndex(Dictionary<int, int> vertices, int i)
         {
             if (!vertices.ContainsKey(i))
             {
