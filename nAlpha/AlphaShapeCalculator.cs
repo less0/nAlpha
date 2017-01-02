@@ -20,8 +20,27 @@ namespace nAlpha
         {
             SetData(points);
             CalculateShape();
-            CloseShapeInternal();
+            if (CloseShape)
+            {
+                CloseShapeImpl();
+            }
             return GetShape();
+        }
+
+        private void CloseShapeImpl()
+        {
+            var vertexCounter = CountVertices();
+            var vertexIndices = vertexCounter.GetIndicesByCount(1);
+            AddClosingEdges(vertexIndices);
+        }
+
+        private void AddClosingEdges(int[] vertexIndices)
+        {
+            foreach (var vertexIndex in vertexIndices)
+            {
+                var nearestPendingVertex = GetNearestPendingVertex(vertexIndices, vertexIndex);
+                AddEdge(resultingVertices[vertexIndex], resultingVertices[nearestPendingVertex]);
+            }
         }
 
         private void SetData(Point[] points)
@@ -39,40 +58,18 @@ namespace nAlpha
             }
         }
 
-        private void CloseShapeInternal()
+        private VertexCounter CountVertices()
         {
-            if (CloseShape)
-            {
-                var vertexCounts = CountVertices();
-
-                var vertexIndices = vertexCounts.Where(kvp => kvp.Value < 2).Select(kvp => kvp.Key).ToArray();
-                foreach (var vertexIndex in vertexIndices)
-                {
-                    var nearestPendingVertex = GetNearestPendingVertex(vertexIndices, vertexIndex);
-                    AddEdge(resultingVertices[vertexIndex], resultingVertices[nearestPendingVertex]);
-                }
-            }
-        }
-
-        private Dictionary<int, int> CountVertices()
-        {
-            Dictionary<int, int> vertexCounts = new Dictionary<int, int>();
+            
+            VertexCounter counter = new VertexCounter();
 
             foreach (var edge in resultingEdges)
             {
-                IncreaseVertexCountByIndex(vertexCounts, edge.Item1);
-                IncreaseVertexCountByIndex(vertexCounts, edge.Item2);
+                counter.IncreaseForIndex(edge.Item1);
+                counter.IncreaseForIndex(edge.Item2);
             }
-            return vertexCounts;
-        }
 
-        private static void IncreaseVertexCountByIndex(Dictionary<int, int> vertices, int i)
-        {
-            if (!vertices.ContainsKey(i))
-            {
-                vertices.Add(i, 0);
-            }
-            vertices[i]++;
+            return counter;
         }
 
         private int GetNearestPendingVertex(int[] vertices, int vertexIndex)
