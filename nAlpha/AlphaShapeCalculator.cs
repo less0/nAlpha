@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace nAlpha
 {
@@ -10,7 +8,7 @@ namespace nAlpha
     {
         public double Alpha { get; set; }
         public bool CloseShape { get; set; }
-        public double Radius => 1/Alpha;
+        public double Radius => 1/(2*Alpha);
 
         private List<Tuple<int, int>> resultingEdges = new List<Tuple<int, int>>();
         private List<Point> resultingVertices = new List<Point>();
@@ -87,7 +85,7 @@ namespace nAlpha
 
         private void ProcessPoint(Point point)
         {
-            foreach (var otherPoint in NearbyPoints(point))
+            foreach (var otherPoint in NearbyPoints(point, this.Radius * 2))
             {
                 Tuple<Point, Point> alphaDiskCenters = CalculateAlphaDiskCenters(point, otherPoint);
 
@@ -101,7 +99,7 @@ namespace nAlpha
 
         private bool DoOtherPointsFallWithinDisk(Point center, Point p1, Point p2)
         {
-            return NearbyPoints(center).Count(p => p != p1 && p != p2) > 0;
+            return NearbyPoints(center, this.Radius).Count(p => p != p1 && p != p2) > 0;
         }
 
         private void AddEdge(Point p1, Point p2)
@@ -133,16 +131,16 @@ namespace nAlpha
             return index;
         }
 
-        private Point[] NearbyPoints(Point point)
+        private Point[] NearbyPoints(Point point, double radius)
         {
-            var nearbyPoints = points.Where(p => p.DistanceTo(point) <= Radius && p != point).ToArray();
+            var nearbyPoints = this.points.Where(p => p.DistanceTo(point) <= radius && p != point).ToArray();
             return nearbyPoints;
         }
 
         private Tuple<Point, Point> CalculateAlphaDiskCenters(Point p1, Point p2)
         {
             double distanceBetweenPoints = p1.DistanceTo(p2);
-            double distanceFromConnectionLine = Math.Sqrt(Radius*Radius - distanceBetweenPoints*distanceBetweenPoints/4);
+            double distanceFromConnectionLine = Math.Sqrt(Radius * Radius - distanceBetweenPoints * distanceBetweenPoints/4);
 
             Point centerOfConnectionLine = p1.CenterTo(p2);
             Point vector = p1.VectorTo(p2);
