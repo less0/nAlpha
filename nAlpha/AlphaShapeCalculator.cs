@@ -7,7 +7,6 @@ namespace nAlpha
     public class AlphaShapeCalculator
     {
         public double Alpha { get; set; }
-        public bool CloseShape { get; set; }
         public double Radius => 1/(2*Alpha);
 
         private List<Tuple<int, int>> resultingEdges = new List<Tuple<int, int>>();
@@ -18,10 +17,6 @@ namespace nAlpha
         {
             SetData(points);
             CalculateShape();
-            if (CloseShape)
-            {
-                CloseShapeImpl();
-            }
             return GetShape();
         }
 
@@ -58,7 +53,6 @@ namespace nAlpha
 
         private VertexCounter CountVertices()
         {
-            
             VertexCounter counter = new VertexCounter();
 
             foreach (var edge in resultingEdges)
