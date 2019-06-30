@@ -7,7 +7,7 @@ namespace nAlpha
     public class AlphaShapeCalculator
     {
         public double Alpha { get; set; }
-        public double Radius => 1/(2*Alpha);
+        public double Radius => 1/(Alpha);
 
         private List<Tuple<int, int>> resultingEdges = new List<Tuple<int, int>>();
         private List<Point> resultingVertices = new List<Point>();

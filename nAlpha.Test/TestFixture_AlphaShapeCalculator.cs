@@ -35,7 +35,7 @@ namespace nAlpha.Test
         }
 
         [TestCase("0|0,1|1,0|1", 1, "0|0,1|1,0|1")]
-        [TestCase("0.1|0.1,0.9|0.1,0.9|0.9,0.8|0.9,0.8|0.2,0.1|0.2", 1.25, "0.1|0.1,0.9|0.1,0.9|0.9,0.8|0.9,0.8|0.2,0.1|0.2")]
+        [TestCase("0.1|0.1,0.9|0.1,0.9|0.9,0.8|0.9,0.8|0.2,0.1|0.2", 2.5, "0.1|0.1,0.9|0.1,0.9|0.9,0.8|0.9,0.8|0.2,0.1|0.2")]
         public void CalculateAlphaShape_ContainsAllPoints(string inputPointsString, double alpha, string expectedResultingPointsString)
         {
             var inputPoints = ParsePoints(inputPointsString);
