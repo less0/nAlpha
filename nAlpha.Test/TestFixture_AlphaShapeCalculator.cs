@@ -70,7 +70,7 @@ namespace nAlpha.Test
             var shapeCalculator = new AlphaShapeCalculator();
             shapeCalculator.Alpha = 2.5/387;
             var shape = shapeCalculator.CalculateShape(pts);
-            shapeCalculator.CloseShape = true;
+            //shapeCalculator.CloseShape = true;
             var sndShape = shapeCalculator.CalculateShape(pts);
             Assert.That(sndShape.Edges.Length, Is.GreaterThan(shape.Edges.Length));
         }
