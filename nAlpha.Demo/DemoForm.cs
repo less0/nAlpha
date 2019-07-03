@@ -50,7 +50,7 @@ namespace nAlpha.Demo
     {
       AlphaShapeCalculator shapeCalculator = new AlphaShapeCalculator();
       shapeCalculator.Alpha = (double) numericUpDownAlpha.Value / Width;
-      shapeCalculator.CloseShape = checkBoxCloseShape.Checked;
+      //shapeCalculator.CloseShape = checkBoxCloseShape.Checked;
       return shapeCalculator;
     }
 
